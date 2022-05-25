@@ -1,12 +1,16 @@
 import os
 import cv2
 import werkzeug.utils
-from flask import Flask, request, jsonify, render_template, send_from_directory
+from werkzeug.serving import WSGIRequestHandler
+
+from flask import Flask, request, jsonify, send_from_directory
 
 from Face_Site import Predict, ToplamYuzSayisi
 
 app = Flask(__name__)
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+
+WSGIRequestHandler.protocol_version = "HTTP/1.1"
 
 
 @app.route('/upload1', methods=["POST"])
@@ -43,6 +47,7 @@ def upload():
     print(execution_path)
     image = Predict(os.path.join(execution_path, filename))
     facecount=ToplamYuzSayisi(os.path.join(execution_path, filename))
+    #duygu=DuyguAnalizi(os.path.join(execution_path, filename))
    # print(image.shape)
     print('predicted')
     out_image = cv2.imwrite(os.path.join(execution_path, "flask" + filename), image)
@@ -50,8 +55,8 @@ def upload():
     #print('flask' + out_image.shape)
 
     return jsonify({
-        "message": "Toplam Yüz Sayısı:" + facecount,
-        "size": "Boyut"
+        "facecount": facecount,
+        "path":"flaskdosya.jpg",
     })
 
 
@@ -62,4 +67,8 @@ def send_image(filename):
 
 @app.route('/')
 def home():
-    return "merhaba"
+    return "merharerbadsd"
+
+
+if __name__=="__main__":
+    app.run(debug=True)

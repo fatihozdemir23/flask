@@ -1,5 +1,6 @@
 import cv2
-
+import deepface.DeepFace
+from deepface import DeepFace
 
 def Predict(imagePath):
 
@@ -31,3 +32,13 @@ def ToplamYuzSayisi(imagePath):
         for (x, y, w, h) in faces:
             cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
     return say
+
+
+def DuyguAnalizi(imagePath):
+    image=cv2.imread(imagePath)
+    image=cv2.resize(image,(48,48))
+    tahmin=DeepFace.analyze(image)
+    return  tahmin['dominant_emotion']
+
+
+
