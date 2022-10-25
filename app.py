@@ -13,19 +13,6 @@ APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 WSGIRequestHandler.protocol_version = "HTTP/1.1"
 
 
-@app.route('/upload1', methods=["POST"])
-def upload1():
-    if (request.method == "POST"):
-        imagefile = request.files['image']
-        filename = werkzeug.utils.secure_filename(imagefile.filename)
-        imagefile.save("./uplodedimages/" + filename)
-
-        return jsonify({
-            "message": "Resim başarı ile yüklendi",
-            "size": "Boyut"
-        })
-
-
 @app.route("/upload", methods=["POST"])
 def upload():
     target = os.path.join(APP_ROOT, 'images/')
@@ -47,12 +34,8 @@ def upload():
     print(execution_path)
     image = Predict(os.path.join(execution_path, filename))
     facecount=ToplamYuzSayisi(os.path.join(execution_path, filename))
-    #duygu=DuyguAnalizi(os.path.join(execution_path, filename))
-   # print(image.shape)
-    print('predicted')
+
     out_image = cv2.imwrite(os.path.join(execution_path, "flask" + filename), image)
-    print('wrote out the image')
-    #print('flask' + out_image.shape)
 
     return jsonify({
         "facecount": facecount,
